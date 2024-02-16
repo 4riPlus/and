@@ -120,19 +120,19 @@ public class GoogleService {
 	}
 
 
-	// 3) 카카오 ID 정보로 회원가입
+	// 3) google ID 정보로 회원가입
 	private User registerGoogleUserIfNeeded(GoogleUserInfoDto googleUserInfoDto) {
-		// DB 에 중복된 Kakao Id 가 있는지 확인
+		// DB 에 중복된 google Id 가 있는지 확인
 		String googleId = googleUserInfoDto.getId();
 		User googleUser = userRepository.findByGoogleId(googleId).orElse(null);
 
 		if (googleUser == null) {
-			// 카카오 사용자 email 동일한 email 가진 회원이 있는지 확인
+			// google 사용자 email 동일한 email 가진 회원이 있는지 확인
 			String googleEmail = googleUserInfoDto.getEmail();
 			User sameEmailUser = userRepository.findByUserName(googleEmail).orElse(null);
 			if (sameEmailUser != null) {
 				googleUser = sameEmailUser;
-				// 기존 회원정보에 카카오 Id 추가
+				// 기존 회원정보에 google Id 추가
 				googleUser = googleUser.googleIdUpdate(googleId);
 			} else {
 				// 신규 회원가입
@@ -140,7 +140,7 @@ public class GoogleService {
 				String password = UUID.randomUUID().toString();
 				String encodedPassword = passwordEncoder.encode(password);
 
-				// email: kakao email
+				// email: google email
 				String email = googleUserInfoDto.getEmail();
 
 				googleUser = new User(email, encodedPassword, googleUserInfoDto.getNickname(), googleId);
